@@ -21,7 +21,7 @@ nothing to install or compile.
   `sessionStorage.removeItem('swift-intro')` in the console and reload.
 - **Scroll-driven story** — on desktop (≥1024×640) the journey film on the
   home page pins to the screen and your scroll drives it: Register →
-  Interview → Visa → Fly out. It snaps to composed scenes when you pause;
+  Match → Visa → Fly out. It snaps to composed scenes when you pause;
   the chapter buttons scroll-seek; ↺ REWATCH returns to chapter one.
 - **`?nosmooth`** — append it to any URL (e.g. `/index.html?nosmooth`) to
   disable ScrollSmoother's inertia scrolling and feel the native-scroll

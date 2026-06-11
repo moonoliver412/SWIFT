@@ -49,18 +49,14 @@
       .fromTo(q('.s1-band'), { scale: 2.6, autoAlpha: 0, rotation: -12 },
         { scale: 1, autoAlpha: 1, rotation: -3, duration: .4, ease: 'power4.in' }, 'ch1+=2.9');
 
-    /* ch2 — match & interview */
+    /* ch2 — matched to a verified employer */
     swap(0, 1, 'ch2');
     tl.fromTo(q('.s2-win'), { scale: .82, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .6, transformOrigin: '50% 50%' }, 'ch2')
       .fromTo(q('.s2-you, .s2-emp'), { y: 66, autoAlpha: 0 }, { y: 40, autoAlpha: 1, duration: .5, stagger: .16 }, 'ch2+=.4')
-      .fromTo(q('.s2-b1'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(2)', transformOrigin: '50% 100%' }, 'ch2+=1.05')
-      .to(q('.s2-b1'), { autoAlpha: 0, duration: .22 }, 'ch2+=1.85')
-      .fromTo(q('.s2-b2'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(2)', transformOrigin: '50% 100%' }, 'ch2+=1.95')
-      .to(q('.s2-b2'), { autoAlpha: 0, duration: .22 }, 'ch2+=2.75')
-      .fromTo(q('.s2-b1'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(2)', transformOrigin: '50% 100%' }, 'ch2+=2.85')
-      .to(q('.s2-b1'), { autoAlpha: 0, duration: .22 }, 'ch2+=3.55')
-      .fromTo(q('.s2-match'), { scale: 3, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .42, ease: 'power4.in' }, 'ch2+=3.8')
-      .fromTo(q('.s2-tag'), { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5 }, 'ch2+=4.25');
+      .fromTo(q('.s2-link'), { scaleX: 0, autoAlpha: 0 }, { scaleX: 1, autoAlpha: 1, duration: .7, ease: 'power2.inOut', transformOrigin: '0% 50%' }, 'ch2+=1.05')
+      .fromTo(q('.s2-node'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .4, ease: 'back.out(2.4)', transformOrigin: '50% 50%' }, 'ch2+=1.7')
+      .fromTo(q('.s2-match'), { scale: 3, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .42, ease: 'power4.in' }, 'ch2+=2.2')
+      .fromTo(q('.s2-tag'), { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5 }, 'ch2+=2.65');
 
     /* ch3 — visa & contract */
     swap(1, 2, 'ch3');
@@ -133,7 +129,7 @@
        snapping/seeking/reloading onto them parks the viewer on a blank green
        stage. These sit where each scene is fully composed instead. */
     tl.addLabel('ch1v', tl.labels.ch1 + 3.3)
-      .addLabel('ch2v', tl.labels.ch2 + 4.5)
+      .addLabel('ch2v', tl.labels.ch2 + 3.35)
       .addLabel('ch3v', tl.labels.ch3 + 3.4)
       .addLabel('ch4v', tl.labels.ch4 + 5.4)
       .addLabel('endv', tl.labels.end + 1.4);
