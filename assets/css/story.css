@@ -1,0 +1,18 @@
+/* ============================================================
+   Swift Consultancy — story.css (index scrollytelling, workstream B)
+   Loaded after style.css; companion to assets/js/story.js.
+   Inert without html.motion-ok + story.js, so the static site
+   renders untouched when the motion layer fails to load.
+   ============================================================ */
+
+/* hero route lines: while DrawSVG draws the strokes, pause the CSS dash-drift
+   keyframe animation — both write stroke-dashoffset and the animation would
+   override the inline value GSAP sets. story.js removes the class (and the
+   inline dash props) once the draw-in completes, so the drift resumes. */
+.routes.routes--drawn path{animation:none}
+
+/* hero takeoff (desktop scrub) animates this wrapper only — motion.js owns
+   .pass transforms (entrance, float, tilt) on the card inside it */
+@media (min-width:1024px){
+  html.motion-ok .pass-wrap{will-change:transform}
+}

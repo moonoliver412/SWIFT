@@ -17,6 +17,25 @@
     return;
   }
   gsap.registerPlugin(ScrollTrigger);
+  // optional enhancers — loaded without onerror class-stripping; register what arrived
+  ['ScrollSmoother', 'ScrambleTextPlugin', 'DrawSVGPlugin', 'MotionPathPlugin'].forEach(n => {
+    if (typeof window[n] !== 'undefined') gsap.registerPlugin(window[n]);
+  });
+
+  /* ================= smooth scroll (desktop-only enhancement) =================
+     Must be created BEFORE any ScrollTrigger so pinType resolves correctly.
+     Kill-switch: append ?nosmooth to the URL. */
+
+  let smoother = null;
+  if (typeof ScrollSmoother !== 'undefined' && fine && innerWidth >= 1024
+      && !/[?&]nosmooth/.test(location.search)
+      && document.querySelector('#smooth-wrapper > #smooth-content')) {
+    smoother = ScrollSmoother.create({
+      wrapper: '#smooth-wrapper', content: '#smooth-content',
+      smooth: 1.1, effects: true, ignoreMobileResize: true
+    });
+    docEl.classList.add('smooth-on');
+  }
 
   /* ================= helpers ================= */
 
@@ -224,21 +243,28 @@
 
   const steps = document.querySelector('.steps');
   if (steps) {
-    const tl = gsap.timeline({ scrollTrigger: { trigger: steps, start: 'top 78%', once: true } });
-    tl.fromTo(steps.querySelectorAll('.step'), { autoAlpha: 0, y: 36 },
-      { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out', stagger: .16 }, 0)
+    // cards pop in once…
+    gsap.timeline({ scrollTrigger: { trigger: steps, start: 'top 78%', once: true } })
+      .fromTo(steps.querySelectorAll('.step'), { autoAlpha: 0, y: 36 },
+        { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out', stagger: .16 }, 0)
       .fromTo(steps.querySelectorAll('.step-dot'), { scale: 0 },
         { scale: 1, duration: .7, ease: 'back.out(2.2)', stagger: .16 }, .1);
-    if (innerWidth > 980) {
+    // …but the route line draws WITH the scroll: the journey advances as you do
+    gsap.matchMedia().add('(min-width: 981px)', () => {
       const plane = document.createElement('span');
       plane.className = 'steps-plane';
       plane.setAttribute('aria-hidden', 'true');
       plane.textContent = '✈';
       steps.appendChild(plane);
-      tl.to(steps, { '--steps-clip': '0%', duration: 1.5, ease: 'power2.inOut' }, .15)
-        .fromTo(plane, { left: '8%', autoAlpha: 1 }, { left: '90%', duration: 1.5, ease: 'power2.inOut' }, .15)
-        .to(plane, { autoAlpha: 0, duration: .3 }, '>-.1');
-    }
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: steps, start: 'top 85%', end: 'top 20%', scrub: .8 },
+        defaults: { ease: 'none' }
+      });
+      tl.to(steps, { '--steps-clip': '0%' }, 0)
+        .fromTo(plane, { left: '8%', autoAlpha: 1 }, { left: '90%' }, 0)
+        .to(plane, { autoAlpha: 0, duration: .08 }, .92);
+      return () => plane.remove();
+    });
   }
 
   /* ================= service card tilt ================= */
@@ -262,13 +288,13 @@
       if (d.open) {
         gsap.to(body, {
           height: 0, autoAlpha: 0, duration: .35, ease: 'power2.inOut',
-          onComplete: () => { d.open = false; gsap.set(body, { clearProps: 'all' }); busy = false; }
+          onComplete: () => { d.open = false; gsap.set(body, { clearProps: 'all' }); busy = false; ScrollTrigger.refresh(); }
         });
       } else {
         d.open = true;
         gsap.fromTo(body, { height: 0, autoAlpha: 0 }, {
           height: body.scrollHeight, autoAlpha: 1, duration: .45, ease: 'power3.out',
-          onComplete: () => { gsap.set(body, { height: 'auto' }); busy = false; }
+          onComplete: () => { gsap.set(body, { height: 'auto' }); busy = false; ScrollTrigger.refresh(); }
         });
       }
     });
@@ -392,6 +418,56 @@
   } else {
     pageIntro(.1);
   }
+
+  /* ================= ticker velocity skew ================= */
+
+  // The .ticker-row owns a CSS marquee transform, so skew its parent band.
+  const tickerBand = document.querySelector('.ticker-band');
+  if (tickerBand) {
+    const clampSkew = gsap.utils.clamp(-7, 7);
+    const proxy = { skew: 0 };
+    ScrollTrigger.create({
+      start: 0, end: 'max',
+      onUpdate(self) {
+        const skew = clampSkew(self.getVelocity() / -400);
+        if (Math.abs(skew) > Math.abs(proxy.skew)) {
+          proxy.skew = skew;
+          gsap.to(proxy, {
+            skew: 0, duration: .9, ease: 'power3', overwrite: true,
+            onUpdate: () => { tickerBand.style.transform = `skewX(${proxy.skew}deg)`; }
+          });
+        }
+      }
+    });
+  }
+
+  /* ================= airport-code settle on eyebrows ================= */
+
+  // ScrambleText is optional CDN cargo; plain-text eyebrows only (no links inside).
+  if (typeof ScrambleTextPlugin !== 'undefined') {
+    document.querySelectorAll('.eyebrow').forEach(el => {
+      if (el.children.length) return;
+      const txt = el.textContent;
+      ScrollTrigger.create({
+        trigger: el, start: 'top 92%', once: true,
+        onEnter: () => gsap.to(el, {
+          duration: .9, scrambleText: { text: txt, chars: 'upperCase', speed: .4 }
+        })
+      });
+    });
+  }
+
+  /* ================= shared API for page modules ================= */
+
+  // story.js (index) and page-fx.js (inner pages) bail unless this exists,
+  // which makes the whole fail-safety contract transitive.
+  window.Swift = {
+    gsap, ScrollTrigger, smoother, fine, reduced,
+    splitFlap, splitText, addTilt, toast,
+    scrollToY: (y, smooth = true) => smoother
+      ? smoother.scrollTo(y, smooth)
+      : window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' })
+  };
 
   /* ================= keep measurements honest ================= */
 

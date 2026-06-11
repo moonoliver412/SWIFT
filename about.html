@@ -27,6 +27,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/page-fx.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <script>try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var d=document.documentElement;d.classList.add('motion-ok');if(!sessionStorage.getItem('swift-intro'))d.classList.add('intro-pending')}}catch(e){}</script>
 
 <script type="application/ld+json">
@@ -49,7 +53,7 @@
 }
 </script>
 </head>
-<body>
+<body data-page="about">
 
 <div class="boarding" aria-hidden="true">
   <div class="boarding-inner">
@@ -62,11 +66,7 @@
 <header>
   <div class="container nav">
     <a class="logo" href="index.html" aria-label="Swift Consultancy home">
-      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <circle cx="22" cy="24" r="14" stroke="#149B4D" stroke-width="3.5"/>
-        <path d="M8 30 Q24 40 44 18" stroke="#DF342B" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-        <path d="M34 12 L44 9 L40 17 L33 16 Z" fill="#149B4D"/>
-      </svg>
+      <img src="assets/img/logo-mark.png" alt="" width="40" height="40">
       <div class="logo-text">SWIFT<span>Consultancy</span></div>
     </a>
     <nav aria-label="Main">
@@ -92,6 +92,7 @@
   </ul>
 </header>
 
+<div id="smooth-wrapper"><div id="smooth-content">
 <main>
 
   <section class="page-hero">
@@ -110,7 +111,7 @@
 
   <!-- TRUST -->
   <section class="section">
-    <div class="container">
+    <div class="container-wide">
       <div class="trust reveal">
         <div>
           <span class="eyebrow" style="color:#7FD8A4">Our Promise</span>
@@ -124,6 +125,7 @@
           </ul>
         </div>
         <div class="warning-card">
+          <i class="warn-draw" aria-hidden="true"></i>
           <span class="tag">Stay Safe</span>
           <h3>How to spot a fake agent</h3>
           <p>A genuine agency will never ask you to pay for a "job guarantee" before an interview, rush you to send money to a personal M-Pesa number, or refuse to show you a contract. If anyone does — walk away, and report them to the authorities.</p>
@@ -140,21 +142,21 @@
         <h2>They flew out. You can too.</h2>
       </div>
       <div class="testi-grid">
-        <div class="testi reveal">
+        <div class="testi reveal" data-speed=".97">
           <blockquote>"From my first visit to the office to landing in Dubai took three months. Everything they told me at the start is exactly what happened. No surprises."</blockquote>
           <div class="who">
             <div class="avatar" style="background:var(--green)">BW</div>
             <div><strong>Brian W.</strong><span>HOTEL STAFF · DUBAI</span></div>
           </div>
         </div>
-        <div class="testi reveal">
+        <div class="testi reveal" data-speed="1">
           <blockquote>"I had been conned twice before by fake agents. Swift sat me down, showed me the employer, the contract, everything. Today I work in Doha and support my family back home."</blockquote>
           <div class="who">
             <div class="avatar" style="background:var(--navy)">AM</div>
             <div><strong>Aisha M.</strong><span>SECURITY OFFICER · QATAR</span></div>
           </div>
         </div>
-        <div class="testi reveal">
+        <div class="testi reveal" data-speed="1.03">
           <blockquote>"The pre-departure training saved me. I knew what to expect, my rights, and who to call. My sister is now applying through Swift as well."</blockquote>
           <div class="who">
             <div class="avatar" style="background:var(--red)">DK</div>
@@ -249,14 +251,18 @@
     </div>
   </div>
 </footer>
+</div></div>
 
 <a class="wa-float" href="https://wa.me/254700000000?text=Hi%20Swift%2C%20I%27m%20interested%20in%20a%20job%20abroad" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg viewBox="0 0 32 32"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.6 6L4 29l8.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-1.8 0-3.5-.5-5-1.3l-.4-.2-4.9 1 1-4.7-.2-.4C5.5 18 5 16.5 5 15 5 9 9.9 4 16 4s11 5 11 11-4.9 10-11 10zm6-7.5c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.8-1-2.4-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.1 1.3 3.3c.2.2 2.3 3.5 5.6 4.9.8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
 </a>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollSmoother.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js" defer></script>
 <script src="assets/js/main.js" defer></script>
 <script src="assets/js/motion.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="assets/js/page-fx.js" defer></script>
 </body>
 </html>

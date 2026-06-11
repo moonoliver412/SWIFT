@@ -1,0 +1,25 @@
+/* Swift Consultancy — inner-page enhancement styles (Phase 2C).
+   Loads AFTER style.css on jobs/services/about/faq/contact only.
+   Hide-then-reveal initial states live in page-fx.js (gsap.set), never here.
+   The one exception (.warn-draw) is gated on html.motion-ok per the
+   fail-safety contract: without motion the card keeps its plain red
+   border-top from core CSS and the strip simply isn't rendered. */
+
+/* ---------- about: warning-card accent draw ---------- */
+/* Under motion-ok the core 6px border-top is folded into the layout
+   (width 0 + compensating padding, so geometry is identical) and the
+   .warn-draw strip — clipped to the card radius by overflow — is scaled
+   in from the left by page-fx.js when the card enters. */
+.warn-draw{display:none}
+html.motion-ok .warning-card{
+  position:relative;overflow:hidden;
+  border-top-width:0;padding-top:calc(2rem + 6px);
+}
+html.motion-ok .warn-draw{
+  display:block;position:absolute;top:0;left:0;right:0;height:6px;
+  background:var(--red);transform:scaleX(0);transform-origin:left center;
+  pointer-events:none;
+}
+
+/* ---------- faq: gentle nudge on the "+" marker before a panel opens ---------- */
+details:not([open]) summary:hover::after{transform:rotate(90deg);transition:transform .35s ease}

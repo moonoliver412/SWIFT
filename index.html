@@ -27,6 +27,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/story.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <script>try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var d=document.documentElement;d.classList.add('motion-ok');if(!sessionStorage.getItem('swift-intro'))d.classList.add('intro-pending')}}catch(e){}</script>
 
 <script type="application/ld+json">
@@ -64,7 +68,7 @@
 }
 </script>
 </head>
-<body>
+<body data-page="index">
 
 <div class="boarding" aria-hidden="true">
   <div class="boarding-inner">
@@ -77,12 +81,7 @@
 <header>
   <div class="container nav">
     <a class="logo" href="index.html" aria-label="Swift Consultancy home">
-      <!-- swap this SVG for the real logo file at assets/img/logo.png when available -->
-      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <circle cx="22" cy="24" r="14" stroke="#149B4D" stroke-width="3.5"/>
-        <path d="M8 30 Q24 40 44 18" stroke="#DF342B" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-        <path d="M34 12 L44 9 L40 17 L33 16 Z" fill="#149B4D"/>
-      </svg>
+      <img src="assets/img/logo-mark.png" alt="" width="40" height="40">
       <div class="logo-text">SWIFT<span>Consultancy</span></div>
     </a>
     <nav aria-label="Main">
@@ -108,14 +107,15 @@
   </ul>
 </header>
 
+<div id="smooth-wrapper"><div id="smooth-content">
 <main>
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg" aria-hidden="true">
-      <div class="blob blob-a"></div>
-      <div class="blob blob-b"></div>
-      <div class="blob blob-c"></div>
+      <div class="blob blob-a" data-speed=".7"></div>
+      <div class="blob blob-b" data-speed="1.25"></div>
+      <div class="blob blob-c" data-speed=".85"></div>
       <svg class="routes" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
         <path d="M120 470 Q 400 240 690 300"/>
         <path d="M120 470 Q 520 120 980 170"/>
@@ -144,21 +144,23 @@
         </div>
       </div>
 
-      <!-- boarding pass card -->
-      <div class="pass reveal" aria-hidden="true">
-        <div class="pass-top"><span>SWIFT CONSULTANCY</span><span>BOARDING PASS</span></div>
-        <div class="pass-body">
-          <div class="pass-route">
-            <div><div class="code">NBO</div><div class="city">Nairobi</div></div>
-            <div class="pass-path"></div>
-            <div style="text-align:right"><div class="code">DXB</div><div class="city">Dubai</div></div>
+      <!-- boarding pass card (wrapper is animated by story.js; motion.js owns .pass transforms) -->
+      <div class="pass-wrap">
+        <div class="pass reveal" aria-hidden="true">
+          <div class="pass-top"><span>SWIFT CONSULTANCY</span><span>BOARDING PASS</span></div>
+          <div class="pass-body">
+            <div class="pass-route">
+              <div><div class="code">NBO</div><div class="city">Nairobi</div></div>
+              <div class="pass-path"></div>
+              <div style="text-align:right"><div class="code">DXB</div><div class="city">Dubai</div></div>
+            </div>
+            <div class="pass-meta">
+              <div><div class="k">Passenger</div><div class="v">You</div></div>
+              <div><div class="k">Status</div><div class="v" style="color:var(--green)">Confirmed</div></div>
+              <div><div class="k">Contract</div><div class="v">2 Years</div></div>
+            </div>
+            <div class="pass-strip"></div>
           </div>
-          <div class="pass-meta">
-            <div><div class="k">Passenger</div><div class="v">You</div></div>
-            <div><div class="k">Status</div><div class="v" style="color:var(--green)">Confirmed</div></div>
-            <div><div class="k">Contract</div><div class="v">2 Years</div></div>
-          </div>
-          <div class="pass-strip"></div>
         </div>
       </div>
     </div>
@@ -172,7 +174,7 @@
         <h2>Departures: featured positions</h2>
         <p>A preview of live roles from verified employers. See the <a href="jobs.html" style="color:#7FD8A4">full departures board</a> for every open position.</p>
       </div>
-      <div class="board reveal" role="table" aria-label="Featured open job positions">
+      <div class="board reveal" role="table" aria-label="Featured open job positions" data-speed="1.04">
         <div class="board-head" role="row">
           <span>Destination</span><span>Role</span><span>Sector</span><span>Positions</span><span>Status</span>
         </div>
@@ -191,13 +193,248 @@
   </section>
 
   <!-- PROCESS SUMMARY -->
-  <section class="section">
+  <section class="section" id="journey">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">The Journey</span>
         <h2>From application to boarding gate</h2>
-        <p>A clear, four-stage route. You'll always know exactly where you are and what comes next. <a href="services.html">See how each stage works</a>.</p>
+        <p>Follow one candidate's journey — from first registration to the boarding gate. Four stages, no guesswork. <a href="services.html">See how each stage works</a>.</p>
       </div>
+
+      <!-- journey film: motion-graphics story, one protagonist. Decorative —
+           the .steps grid below tells the same story statically, so this is
+           shown only under html.motion-ok per the motion fail-safety contract. -->
+      <div class="film reveal" data-film role="group" aria-label="Animated story: how the journey works">
+        <div class="film-top" aria-hidden="true">
+          <span><i class="blink"></i> SWIFT STORY · HOW IT WORKS</span>
+          <span>FLIGHT SC-001 · NBO ✈ DXB</span>
+        </div>
+        <div class="film-stage">
+          <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+            <defs>
+              <g id="figA">
+                <circle cx="0" cy="-92" r="15" fill="#E8F2EA"/>
+                <rect x="-17" y="-72" width="34" height="52" rx="11" fill="#E8F2EA"/>
+                <rect x="-17" y="-48" width="34" height="9" fill="#149B4D"/>
+                <rect x="-15" y="-22" width="12" height="22" rx="5" fill="#E8F2EA"/>
+                <rect x="3" y="-22" width="12" height="22" rx="5" fill="#E8F2EA"/>
+              </g>
+              <g id="figB">
+                <circle cx="0" cy="-92" r="15" fill="#9DB1A6"/>
+                <rect x="-17" y="-72" width="34" height="52" rx="11" fill="#9DB1A6"/>
+                <path d="M0 -70 l6 9 l-6 22 l-6 -22 z" fill="#DF342B"/>
+                <rect x="-15" y="-22" width="12" height="22" rx="5" fill="#9DB1A6"/>
+                <rect x="3" y="-22" width="12" height="22" rx="5" fill="#9DB1A6"/>
+              </g>
+              <g id="case">
+                <rect x="6" y="-60" width="12" height="14" rx="3" fill="none" stroke="#F2B53A" stroke-width="3"/>
+                <rect x="-2" y="-48" width="28" height="42" rx="6" fill="#F2B53A"/>
+                <circle cx="5" cy="-2" r="4" fill="#8FA8B8"/>
+                <circle cx="19" cy="-2" r="4" fill="#8FA8B8"/>
+              </g>
+              <g id="bustA">
+                <circle cy="-24" r="20" fill="#E8F2EA"/>
+                <path d="M-32 36 a32 30 0 0 1 64 0 z" fill="#E8F2EA"/>
+                <rect x="-24" y="24" width="48" height="9" fill="#149B4D"/>
+              </g>
+              <g id="bustB">
+                <circle cy="-24" r="20" fill="#9DB1A6"/>
+                <path d="M-32 36 a32 30 0 0 1 64 0 z" fill="#9DB1A6"/>
+                <path d="M0 -4 l7 10 l-7 20 l-7 -20 z" fill="#DF342B"/>
+              </g>
+              <g id="check">
+                <circle r="15" fill="#149B4D"/>
+                <path d="M-7 0 l5 6 l9 -12" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+            </defs>
+
+            <g class="fs-bg">
+              <path class="fx-bgpath" d="M-60 560 Q 320 380 660 430 T 1260 300"/>
+              <path class="fx-bgpath" d="M-80 500 Q 520 240 1280 430"/>
+            </g>
+
+            <!-- 01 · register & verify -->
+            <g class="fs fs-1">
+              <text class="ft-label" x="48" y="64">01 · REGISTER &amp; VERIFY</text>
+              <line class="fx-floor" x1="0" y1="470" x2="1200" y2="470"/>
+              <g class="s1-desk">
+                <use href="#figB" transform="translate(852,448) scale(.95)"/>
+                <rect x="700" y="364" width="300" height="106" rx="10" fill="#16212F"/>
+                <rect x="700" y="364" width="300" height="12" rx="6" fill="#1D2A3B"/>
+                <rect x="745" y="298" width="210" height="40" rx="8" fill="#149B4D"/>
+                <text class="ft-pill" x="850" y="324" text-anchor="middle">SWIFT CONSULTANCY</text>
+              </g>
+              <g class="s1-hero" transform="translate(250,470)">
+                <use href="#figA"/>
+                <use href="#case" transform="translate(28,0)"/>
+              </g>
+              <g class="s1-card" transform="translate(330,150)">
+                <rect width="160" height="104" rx="10" fill="#F7FAF7"/>
+                <text class="ft-card" x="16" y="30">CV</text>
+                <rect x="16" y="48" width="112" height="8" rx="4" fill="#D8E4DC"/>
+                <rect x="16" y="66" width="92" height="8" rx="4" fill="#D8E4DC"/>
+                <rect x="16" y="84" width="104" height="8" rx="4" fill="#D8E4DC"/>
+                <use href="#check" class="s1-check" transform="translate(146,12)"/>
+              </g>
+              <g class="s1-card" transform="translate(520,150)">
+                <rect width="160" height="104" rx="10" fill="#F7FAF7"/>
+                <text class="ft-card" x="16" y="30">PASSPORT</text>
+                <rect x="16" y="48" width="104" height="8" rx="4" fill="#D8E4DC"/>
+                <rect x="16" y="66" width="116" height="8" rx="4" fill="#D8E4DC"/>
+                <rect x="16" y="84" width="88" height="8" rx="4" fill="#D8E4DC"/>
+                <use href="#check" class="s1-check" transform="translate(146,12)"/>
+              </g>
+              <g class="s1-card" transform="translate(710,150)">
+                <rect width="160" height="104" rx="10" fill="#F7FAF7"/>
+                <text class="ft-card" x="16" y="30">CERTIFICATES</text>
+                <rect x="16" y="48" width="96" height="8" rx="4" fill="#D8E4DC"/>
+                <rect x="16" y="66" width="120" height="8" rx="4" fill="#D8E4DC"/>
+                <rect x="16" y="84" width="84" height="8" rx="4" fill="#D8E4DC"/>
+                <use href="#check" class="s1-check" transform="translate(146,12)"/>
+              </g>
+              <g class="s1-band" transform="translate(600,96)">
+                <rect x="-175" y="-30" width="350" height="60" rx="12" fill="#149B4D"/>
+                <text class="ft-pill" text-anchor="middle" y="7">PROFILE VERIFIED ✓</text>
+              </g>
+            </g>
+
+            <!-- 02 · match & interview -->
+            <g class="fs fs-2">
+              <text class="ft-label" x="48" y="64">02 · MATCH &amp; INTERVIEW</text>
+              <g class="s2-win" transform="translate(600,300)">
+                <rect x="-350" y="-180" width="700" height="360" rx="16" fill="#0B121B" stroke="#1D2A3B" stroke-width="2"/>
+                <rect x="-350" y="-180" width="700" height="42" rx="16" fill="#16212F"/>
+                <rect x="-350" y="-158" width="700" height="20" fill="#16212F"/>
+                <circle cx="-322" cy="-159" r="6" fill="#DF342B"/>
+                <circle cx="-302" cy="-159" r="6" fill="#F2B53A"/>
+                <circle cx="-282" cy="-159" r="6" fill="#149B4D"/>
+                <text class="ft-s" text-anchor="middle" y="-153">SWIFT VIDEO INTERVIEW</text>
+                <g class="s2-rec">
+                  <circle class="blinkc" cx="316" cy="-159" r="6" fill="#DF342B"/>
+                  <text class="ft-s f-red" x="300" y="-153" text-anchor="end">REC</text>
+                </g>
+                <line x1="0" y1="-118" x2="0" y2="160" stroke="#1D2A3B" stroke-width="2"/>
+                <g class="s2-you" transform="translate(-175,40)">
+                  <use href="#bustA"/>
+                  <text class="ft-s" y="96" text-anchor="middle">YOU · NAIROBI</text>
+                </g>
+                <g class="s2-emp" transform="translate(175,40)">
+                  <use href="#bustB"/>
+                  <text class="ft-s" y="96" text-anchor="middle">EMPLOYER · DUBAI</text>
+                </g>
+                <g class="s2-b1" transform="translate(-175,-66)">
+                  <rect x="-48" y="-24" width="96" height="48" rx="14" fill="#E8F2EA"/>
+                  <circle cx="-18" r="5" fill="#52645A"/><circle r="5" fill="#52645A"/><circle cx="18" r="5" fill="#52645A"/>
+                </g>
+                <g class="s2-b2" transform="translate(175,-66)">
+                  <rect x="-48" y="-24" width="96" height="48" rx="14" fill="#E8F2EA"/>
+                  <circle cx="-18" r="5" fill="#52645A"/><circle r="5" fill="#52645A"/><circle cx="18" r="5" fill="#52645A"/>
+                </g>
+              </g>
+              <g class="s2-match" transform="translate(600,300) rotate(-5)">
+                <rect x="-170" y="-48" width="340" height="96" rx="14" fill="none" stroke="#5BD693" stroke-width="5"/>
+                <text class="ft-match" text-anchor="middle" y="16">MATCHED</text>
+              </g>
+              <text class="s2-tag ft-s f-amber" x="600" y="522" text-anchor="middle">ROLE: HOTEL &amp; HOSPITALITY · DXB · CONTRACT: 2 YEARS</text>
+            </g>
+
+            <!-- 03 · visa & contract -->
+            <g class="fs fs-3">
+              <text class="ft-label" x="48" y="64">03 · VISA &amp; CONTRACT</text>
+              <g class="s3-book" transform="translate(430,310)">
+                <g class="s3-book-in">
+                  <rect x="-210" y="-140" width="210" height="280" rx="12" fill="#F7FAF7"/>
+                  <rect x="0" y="-140" width="210" height="280" rx="12" fill="#FFFFFF"/>
+                  <line x1="0" y1="-128" x2="0" y2="128" stroke="#D8E4DC" stroke-width="2"/>
+                  <rect x="-184" y="-112" width="70" height="86" rx="8" fill="#E3F3E9"/>
+                  <circle cx="-149" cy="-86" r="13" fill="#149B4D"/>
+                  <rect x="-165" y="-68" width="32" height="34" rx="10" fill="#149B4D"/>
+                  <rect x="-100" y="-100" width="80" height="8" rx="4" fill="#D8E4DC"/>
+                  <rect x="-100" y="-80" width="64" height="8" rx="4" fill="#D8E4DC"/>
+                  <rect x="-100" y="-60" width="72" height="8" rx="4" fill="#D8E4DC"/>
+                  <rect x="-184" y="6" width="164" height="8" rx="4" fill="#E3F3E9"/>
+                  <rect x="-184" y="26" width="140" height="8" rx="4" fill="#E3F3E9"/>
+                  <text class="ft-s f-dim" x="-105" y="118" text-anchor="middle">PASSPORT · KENYA</text>
+                  <rect x="28" y="64" width="150" height="8" rx="4" fill="#E3F3E9"/>
+                  <rect x="28" y="84" width="120" height="8" rx="4" fill="#E3F3E9"/>
+                </g>
+              </g>
+              <g class="s3-stamp" transform="translate(535,260)">
+                <g transform="rotate(-8)">
+                  <rect x="-90" y="-48" width="180" height="96" rx="10" fill="none" stroke="#DF342B" stroke-width="5"/>
+                  <text class="ft-stampT" text-anchor="middle" y="-10">VISA</text>
+                  <text class="ft-stampS" text-anchor="middle" y="24">APPROVED</text>
+                </g>
+              </g>
+              <circle class="s3-ring" cx="535" cy="260" r="64" fill="none" stroke="#DF342B" stroke-width="3"/>
+              <g class="s3-doc" transform="translate(880,310)">
+                <rect x="-110" y="-150" width="220" height="300" rx="12" fill="#FFFFFF"/>
+                <text class="ft-card" x="0" y="-114" text-anchor="middle">EMPLOYMENT CONTRACT</text>
+                <rect x="-80" y="-66" width="140" height="8" rx="4" fill="#D8E4DC"/>
+                <use href="#check" class="s3-check" transform="translate(88,-62)"/>
+                <rect x="-80" y="-12" width="140" height="8" rx="4" fill="#D8E4DC"/>
+                <use href="#check" class="s3-check" transform="translate(88,-8)"/>
+                <rect x="-80" y="42" width="140" height="8" rx="4" fill="#D8E4DC"/>
+                <use href="#check" class="s3-check" transform="translate(88,46)"/>
+                <rect x="-80" y="96" width="100" height="8" rx="4" fill="#E3F3E9"/>
+              </g>
+              <text class="s3-cap ft-s" x="880" y="505" text-anchor="middle">REVIEWED LINE BY LINE · BEFORE YOU SIGN</text>
+            </g>
+
+            <!-- 04 · fly out -->
+            <g class="fs fs-4">
+              <text class="ft-label" x="48" y="64">04 · FLY OUT</text>
+              <line class="fx-floor" x1="0" y1="470" x2="1200" y2="470"/>
+              <g class="s4-sign" transform="translate(600,118)">
+                <line x1="-90" y1="-118" x2="-90" y2="-34" stroke="#1D2A3B" stroke-width="3"/>
+                <line x1="90" y1="-118" x2="90" y2="-34" stroke="#1D2A3B" stroke-width="3"/>
+                <rect x="-160" y="-34" width="320" height="70" rx="10" fill="#0B121B" stroke="#1D2A3B" stroke-width="2"/>
+                <text class="ft-gate" text-anchor="middle" y="-2">GATE 04 → DXB</text>
+                <text class="ft-s" text-anchor="middle" y="24">NOW BOARDING · FLIGHT SC-001</text>
+              </g>
+              <g class="s4-door" transform="translate(880,470)">
+                <text class="ft-s f-green" y="-170" text-anchor="middle">BOARDING</text>
+                <rect x="-46" y="-152" width="92" height="152" rx="6" fill="#16212F" stroke="#1D2A3B" stroke-width="2"/>
+                <rect x="-32" y="-138" width="64" height="138" rx="4" fill="#0B121B"/>
+              </g>
+              <g class="s4-hero" transform="translate(220,470)">
+                <g class="s4-hero-in">
+                  <use href="#figA"/>
+                  <use href="#case" transform="translate(28,0)"/>
+                </g>
+              </g>
+              <path class="s4-trail" d="M140 470 Q 700 470 1020 170"/>
+              <text class="s4-plane ft-plane" transform="translate(140,470)">✈</text>
+              <g class="s4-dest" transform="translate(1020,170)">
+                <circle class="pingc" r="8" fill="#F2B53A"/>
+                <text class="ft-s f-amber" x="20" y="6">DXB</text>
+              </g>
+            </g>
+
+            <!-- end card -->
+            <g class="fs fs-end">
+              <rect width="1200" height="600" fill="#0B121B" opacity=".9"/>
+              <g transform="translate(600,212)">
+                <g class="fe-logo">
+                  <image href="assets/img/logo-mark.png" x="-75" y="-75" width="150" height="150"/>
+                </g>
+              </g>
+              <text class="fe-h ft-head" x="600" y="330" text-anchor="middle">You land with a job.</text>
+              <text class="fe-sub ft-s" x="600" y="372" text-anchor="middle">A CONTRACT · A CONTACT ON THE GROUND · NBO ✈ DXB</text>
+            </g>
+
+            <g class="fs-wipe"><rect x="-120" y="-60" width="1440" height="720" fill="#149B4D" transform="skewX(-8)"/></g>
+          </svg>
+        </div>
+        <div class="film-bar">
+          <button class="film-ch on" type="button" aria-label="Play chapter 1: Register and verify"><b>01</b><span>Register</span><i></i></button>
+          <button class="film-ch" type="button" aria-label="Play chapter 2: Match and interview"><b>02</b><span>Interview</span><i></i></button>
+          <button class="film-ch" type="button" aria-label="Play chapter 3: Visa and contract"><b>03</b><span>Visa</span><i></i></button>
+          <button class="film-ch" type="button" aria-label="Play chapter 4: Fly out"><b>04</b><span>Fly out</span><i></i></button>
+          <button class="film-replay" type="button" aria-label="Replay the story">↺ REPLAY</button>
+        </div>
+      </div>
+
       <div class="steps">
         <div class="step reveal">
           <div class="step-dot">01</div>
@@ -239,7 +476,7 @@
           </ul>
           <p style="margin-top:1.6rem"><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.4)" href="about.html">More about Swift</a></p>
         </div>
-        <div class="warning-card">
+        <div class="warning-card" data-speed=".92">
           <span class="tag">Stay Safe</span>
           <h3>How to spot a fake agent</h3>
           <p>A genuine agency will never ask you to pay for a "job guarantee" before an interview, rush you to send money to a personal M-Pesa number, or refuse to show you a contract. If anyone does — walk away, and report them to the authorities.</p>
@@ -256,7 +493,7 @@
           <h2>Ready to start your journey?</h2>
           <p>Register your interest today and we'll match you with a verified employer abroad — or answer any question on WhatsApp first.</p>
         </div>
-        <div class="actions">
+        <div class="actions" data-lag=".18">
           <a class="btn btn-primary" href="contact.html">Apply now</a>
           <a class="btn btn-whatsapp" href="https://wa.me/254700000000?text=Hi%20Swift%2C%20I%27m%20interested%20in%20a%20job%20abroad" target="_blank" rel="noopener">WhatsApp us</a>
         </div>
@@ -332,14 +569,20 @@
     </div>
   </div>
 </footer>
+</div></div>
 
 <a class="wa-float" href="https://wa.me/254700000000?text=Hi%20Swift%2C%20I%27m%20interested%20in%20a%20job%20abroad" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg viewBox="0 0 32 32"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.6 6L4 29l8.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-1.8 0-3.5-.5-5-1.3l-.4-.2-4.9 1 1-4.7-.2-.4C5.5 18 5 16.5 5 15 5 9 9.9 4 16 4s11 5 11 11-4.9 10-11 10zm6-7.5c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.8-1-2.4-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.1 1.3 3.3c.2.2 2.3 3.5 5.6 4.9.8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
 </a>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollSmoother.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/main.js" defer></script>
 <script src="assets/js/motion.js" defer onerror="document.documentElement.classList.remove('motion-ok','intro-pending')"></script>
+<script src="assets/js/story.js" defer></script>
 </body>
 </html>

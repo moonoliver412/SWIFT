@@ -15,6 +15,9 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
+/* clip (not hidden — keeps position:sticky alive): pre-reveal x-offsets and
+   decorative overhangs must never widen the layout viewport on phones */
+html,body{overflow-x:clip}
 body{
   font-family:'Inter',system-ui,sans-serif;
   background:var(--paper);
@@ -25,7 +28,10 @@ body{
 ::selection{background:var(--green);color:#fff}
 img{max-width:100%;display:block}
 a{color:inherit}
-.container{width:min(1140px,92%);margin:0 auto}
+.container{width:min(1340px,94%);margin:0 auto}
+.container-wide{width:min(1560px,96%);margin:0 auto}
+/* ScrollSmoother (motion.js) owns scrolling when active — native smooth fights it */
+html.smooth-on{scroll-behavior:auto}
 .mono{font-family:'IBM Plex Mono',monospace}
 .eyebrow{
   font-family:'IBM Plex Mono',monospace;
@@ -39,6 +45,8 @@ h2{font-size:clamp(2rem,4.5vw,3.1rem);font-weight:850;font-stretch:95%}
 .section{padding:6rem 0}
 .section-head{max-width:640px;margin-bottom:3.2rem}
 .section-head p{color:var(--muted);margin-top:.9rem}
+.section-head--right{margin-left:auto;text-align:right}
+.section-head--right p{margin-left:auto}
 .btn{
   display:inline-flex;align-items:center;gap:.55rem;
   font-weight:600;font-size:.95rem;text-decoration:none;
@@ -70,7 +78,7 @@ header{
 }
 .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
 .logo{display:flex;align-items:center;gap:.65rem;text-decoration:none}
-.logo svg{width:40px;height:40px}
+.logo svg,.logo img{width:40px;height:40px}
 .logo-text{font-family:'Archivo',sans-serif;font-weight:900;font-size:1.25rem;letter-spacing:-.01em;color:var(--green-deep);line-height:1}
 .logo-text span{display:block;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:.55rem;letter-spacing:.32em;color:var(--navy);text-transform:uppercase}
 nav ul{display:flex;gap:2rem;list-style:none}
@@ -565,6 +573,76 @@ html.motion-ok .steps::before{clip-path:inset(0 var(--steps-clip) 0 0)}
   box-shadow:0 18px 50px rgba(10,77,39,.4);
 }
 
+/* ---------- journey film (motion-graphics story) ----------
+   Shown only when the motion layer is live; the .steps grid below it is the
+   static telling of the same story, so nothing is lost without it. */
+.film{
+  display:none;margin-bottom:3.4rem;
+  background:#0B121B;border:1px solid var(--board-line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+html.motion-ok .film{display:block}
+.film-top{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;
+  background:var(--board-line);padding:.75rem 1.4rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.2em;
+  text-transform:uppercase;color:#8FA8B8;
+}
+.film-top span{display:inline-flex;align-items:center;gap:.6rem}
+.film-stage{position:relative;background:#0B121B}
+.film-stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px);
+}
+.film-stage svg{display:block;width:100%;height:auto}
+/* pinned scrub mode (desktop): player must fit the viewport under the header */
+@media (min-width:1024px){
+  html.motion-ok .film-stage svg{max-height:calc(100vh - 290px);margin:0 auto}
+}
+.film .fs{opacity:0}                      /* GSAP reveals scenes — never flash stacked */
+.fs-wipe{transform:translateX(-1500px)}
+.fx-floor{stroke:#1D2A3B;stroke-width:2}
+.fx-bgpath{fill:none;stroke:#16212F;stroke-width:1.5;stroke-dasharray:3 9}
+.s4-trail{fill:none;stroke:var(--green);stroke-width:2;stroke-dasharray:4 10}
+.film .blinkc{animation:blink 1.4s infinite}
+.film .pingc{transform-box:fill-box;transform-origin:center;animation:ping-pulse 3.2s ease-in-out infinite}
+.film text{user-select:none;font-family:'IBM Plex Mono',monospace}
+.ft-label{font-size:17px;font-weight:600;letter-spacing:.22em;fill:#8FA8B8}
+.ft-s{font-size:13.5px;letter-spacing:.12em;fill:#8FA8B8}
+.ft-card{font-size:13px;font-weight:600;letter-spacing:.1em;fill:#0A4D27}
+.ft-pill{font-size:15px;font-weight:600;letter-spacing:.16em;fill:#fff}
+.ft-gate{font-family:'Archivo',sans-serif;font-size:30px;font-weight:850;letter-spacing:.04em;fill:#F2B53A}
+.ft-match{font-family:'Archivo',sans-serif;font-size:46px;font-weight:850;fill:#5BD693}
+.ft-stampT{font-size:26px;font-weight:600;letter-spacing:.2em;fill:#DF342B}
+.ft-stampS{font-size:19px;font-weight:600;letter-spacing:.14em;fill:#DF342B}
+.ft-plane{font-size:46px;fill:#E8F2EA}
+.ft-head{font-family:'Archivo',sans-serif;font-size:44px;font-weight:850;letter-spacing:-.01em;fill:#fff}
+.f-red{fill:#DF342B}.f-amber{fill:#F2B53A}.f-green{fill:#5BD693}.f-dim{fill:#52645A}
+.film-bar{display:grid;grid-template-columns:repeat(4,1fr) auto;border-top:1px solid var(--board-line)}
+.film-ch,.film-replay{
+  position:relative;background:none;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:#8FA8B8;padding:.9rem .5rem;
+  display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  transition:color .2s,background .2s;
+}
+.film-ch+.film-ch,.film-replay{border-left:1px solid var(--board-line)}
+.film-ch b{color:#5BD693;font-weight:600}
+.film-ch:hover,.film-replay:hover,.film-ch.on{color:#E8F2EA;background:#121D2B}
+.film-ch:focus-visible,.film-replay:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+.film-ch i{
+  position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,var(--green),#7FD8A4);
+  transform:scaleX(0);transform-origin:0 50%;
+}
+.film-replay{padding:.9rem 1.3rem;color:#7FD8A4}
+.film-replay.pulse{animation:replay-pulse 1.5s ease-in-out infinite}
+@keyframes replay-pulse{0%,100%{background:transparent}50%{background:rgba(20,155,77,.18)}}
+@media (max-width:680px){
+  .film-ch span{display:none}
+  .film-top{font-size:.6rem}
+}
+
 /* ---------- page-to-page crossfade (progressive enhancement) ---------- */
 @media (prefers-reduced-motion:no-preference){
   @view-transition{navigation:auto}
@@ -581,7 +659,152 @@ html.motion-ok .steps::before{clip-path:inset(0 var(--steps-clip) 0 0)}
     animation-duration:.01ms!important;animation-iteration-count:1!important;
     transition-duration:.01ms!important;
   }
-  .boarding,.grain,.cursor-aura,.flight-progress,.steps-plane{display:none!important}
+  .boarding,.grain,.cursor-aura,.flight-progress,.steps-plane,.film{display:none!important}
   .ticker-row{animation:none!important}
   .blob,.routes path,.routes circle{animation:none!important}
+}
+
+/* ============================================================
+   STORY (index scrollytelling) — owned by workstream B.
+   Parallel agents: append ONLY inside your own section below.
+   ============================================================ */
+
+/* ============================================================
+   PAGE FX (inner pages) — owned by workstream C.
+   ============================================================ */
+
+/* ============================================================
+   MICRO-INTERACTIONS — owned by workstream D.
+   ============================================================ */
+
+/* --- 1. nav link underline --- */
+nav ul a{position:relative}
+nav ul a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--green),#7FD8A4);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .25s ease;pointer-events:none;
+}
+nav ul a:hover::after,
+nav ul a[aria-current="page"]::after{transform:scaleX(1)}
+
+/* --- 2. hero scroll hint (injected by main.js on index; decorative → motion-ok only) --- */
+.scroll-hint{display:none}
+html.motion-ok .scroll-hint{
+  display:flex;flex-direction:column;align-items:center;gap:.15rem;
+  position:absolute;left:50%;bottom:-3.4rem;transform:translateX(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.34em;
+  color:var(--muted);opacity:.9;transition:opacity .5s ease;pointer-events:none;
+}
+html.motion-ok .scroll-hint i{
+  font-style:normal;font-size:1.05rem;color:var(--green-deep);
+  transform:rotate(90deg);animation:hint-bob 1.7s ease-in-out infinite;
+}
+html.motion-ok .scroll-hint.gone{opacity:0}
+@keyframes hint-bob{0%,100%{transform:rotate(90deg) translateX(0)}50%{transform:rotate(90deg) translateX(6px)}}
+@media (max-width:680px){.scroll-hint{display:none!important}}
+
+/* --- 3. custom scrollbar --- */
+html{scrollbar-color:var(--green) var(--paper);scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--paper)}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:999px;border:2px solid var(--paper)}
+::-webkit-scrollbar-thumb:hover{background:var(--green-deep)}
+
+/* --- 4. dark-band selection --- */
+.board-section ::selection,footer ::selection,.ticker-band ::selection{background:var(--amber);color:#0F1722}
+
+/* --- 5. button press state (no transform — GSAP owns .btn transforms) --- */
+.btn:active{filter:brightness(.92) saturate(1.05)}
+
+/* --- 6. card hover sheen (background-position sweep on an inset ::after:
+       no overflow/clipping needed, so .svc preserve-3d tilt stays intact) --- */
+.svc{position:relative}
+.svc::after,.testi::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background-image:linear-gradient(115deg,transparent 35%,rgba(127,216,164,.3) 50%,transparent 65%);
+  background-size:200% 100%;background-repeat:no-repeat;background-position:150% 0;
+}
+.svc:hover::after,.testi:hover::after{animation:card-sheen .8s ease}
+@keyframes card-sheen{from{background-position:150% 0}to{background-position:-50% 0}}
+
+/* --- 7. logo hover hop (tiny takeoff) --- */
+header .logo:hover img{animation:logo-hop .5s ease}
+@keyframes logo-hop{
+  0%{transform:translateY(0) rotate(0)}
+  35%{transform:translateY(-3px) rotate(-8deg)}
+  70%{transform:translateY(-1px) rotate(-3deg)}
+  100%{transform:translateY(0) rotate(0)}
+}
+
+/* --- 8. footer route line (main.js adds .foot-in via IntersectionObserver) --- */
+footer .foot-bottom span:last-child{position:relative}
+footer .foot-bottom span:last-child::after{
+  content:"✈";position:absolute;left:0;top:50%;transform:translateY(-56%);
+  font-size:.95rem;line-height:1;color:var(--amber);opacity:0;pointer-events:none;
+  filter:drop-shadow(0 0 6px rgba(242,181,58,.5));
+}
+html.motion-ok footer.foot-in .foot-bottom span:last-child::after{
+  animation:foot-fly 2.2s ease-in-out .15s both;
+}
+@keyframes foot-fly{0%{left:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{left:100%;opacity:0}}
+
+/* --- 9. whatsapp float entrance (wa-ping on ::after untouched) --- */
+html.motion-ok .wa-float{animation:wa-pop .6s cubic-bezier(.34,1.56,.64,1) .9s backwards}
+@keyframes wa-pop{from{transform:scale(0)}to{transform:scale(1)}}
+
+/* --- 10. eyebrow runway dash --- */
+html.motion-ok .eyebrow::before{animation:runway .9s ease .2s both}
+@keyframes runway{from{width:0}to{width:26px}}
+
+/* --- 11. toast progress bar (matches 4.2s toast lifetime in motion.js) --- */
+.toast{overflow:hidden}
+.toast::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,var(--green),#7FD8A4);
+  transform-origin:0 50%;animation:toast-run 4.2s linear both;
+}
+@keyframes toast-run{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+
+/* --- 12. board row hover: amber inset edge + dest glow --- */
+.board-row{position:relative}
+.board-row::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--amber);
+  transform:scaleY(0);transform-origin:50% 100%;transition:transform .2s ease;pointer-events:none;
+}
+.board-row:hover::before{transform:scaleY(1)}
+.board-row .dest{transition:text-shadow .25s ease}
+.board-row:hover .dest{text-shadow:0 0 14px rgba(242,181,58,.45)}
+
+/* --- 13. focus-visible audit (never bare :focus) --- */
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+.board-section a:focus-visible,.board-section button:focus-visible,.board-section summary:focus-visible,
+footer a:focus-visible,footer button:focus-visible,
+.film button:focus-visible,.film-ch:focus-visible,.film-replay:focus-visible{outline-color:var(--amber)}
+
+/* --- 15. form valid ticks (placeholder-gated; :invalid left alone) --- */
+.field input:not(:placeholder-shown):valid,
+.field select:valid,
+.field textarea:not(:placeholder-shown):valid{
+  border-color:var(--green);
+  box-shadow:inset 0 0 0 1px rgba(20,155,77,.18),inset 0 2px 6px rgba(20,155,77,.06);
+}
+.field input:not(:placeholder-shown):valid:focus,
+.field select:valid:focus,
+.field textarea:not(:placeholder-shown):valid:focus{
+  box-shadow:0 0 0 4px rgba(20,155,77,.12),inset 0 0 0 1px rgba(20,155,77,.18);
+}
+
+/* --- 16. reduced-motion + fail-safe kills for everything above --- */
+@media (prefers-reduced-motion:reduce){
+  .scroll-hint{display:none!important}
+  nav ul a::after,.board-row::before,.board-row .dest{transition:none!important}
+  html.motion-ok .scroll-hint i,
+  header .logo:hover img,
+  .svc:hover::after,.testi:hover::after,
+  .wa-float,
+  .eyebrow::before,
+  .toast::after,
+  footer .foot-bottom span:last-child::after{animation:none!important}
+  footer .foot-bottom span:last-child::after{content:none!important}
 }
