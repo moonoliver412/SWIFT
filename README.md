@@ -56,6 +56,5 @@ page modules bail unless the core exported `window.Swift`.
 
 ## Before launch
 
-Placeholders still to replace: production domain (canonicals, OG tags,
-JSON-LD, `sitemap.xml`, `robots.txt`), phone/WhatsApp number
-(+254 700 000 000), `assets/img/og-cover.jpg`, hero stats, and testimonials.
+Placeholders still to replace: `assets/img/og-cover.jpg`, hero stats, and
+testimonials. The phone/WhatsApp number is live: +254 114 748405.
